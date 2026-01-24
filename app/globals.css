@@ -1,0 +1,407 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Satix Theme - Cream/Pink/Blue editorial style */
+  --background: oklch(0.97 0.01 90); /* Off-white/cream */
+  --foreground: oklch(0.15 0 0); /* Near black */
+  --card: oklch(0.98 0.005 90); /* Slightly lighter cream */
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(0.98 0.005 90);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.55 0.2 25); /* Red accent */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.92 0.03 350); /* Soft pink */
+  --secondary-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.94 0.01 90);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.88 0.05 230); /* Light blue */
+  --accent-foreground: oklch(0.15 0 0);
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.88 0.01 90);
+  --input: oklch(0.92 0.01 90);
+  --ring: oklch(0.55 0.2 25);
+  --chart-1: oklch(0.55 0.2 25); /* Red */
+  --chart-2: oklch(0.75 0.1 230); /* Blue */
+  --chart-3: oklch(0.85 0.08 350); /* Pink */
+  --chart-4: oklch(0.65 0.15 150); /* Green */
+  --chart-5: oklch(0.7 0.12 60); /* Orange */
+  --radius: 0.5rem;
+  
+  /* Custom colors for sections */
+  --cream: oklch(0.97 0.01 90);
+  --pink: oklch(0.92 0.04 350);
+  --blue: oklch(0.92 0.05 230);
+  --red: oklch(0.55 0.2 25);
+
+  /* Shadcn additions */
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+ 
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --font-sans: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Custom section colors */
+  --color-cream: var(--cream);
+  --color-pink: var(--pink);
+  --color-blue: var(--blue);
+  --color-red: var(--red);
+
+  /* Shadcn additions */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Premium Section Transitions */
+.section-transition {
+  width: 100%;
+  pointer-events: none;
+  will-change: background;
+  position: relative;
+  z-index: 1;
+}
+
+/* Soft Section Shadows for Depth - REMOVED to eliminate white lines */
+.section {
+  position: relative;
+}
+
+/* Global Noise Overlay for Premium Texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: overlay;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove any jarring padding jumps */
+main {
+  overflow-x: hidden;
+}
+
+/* Ensure sections flow seamlessly */
+section {
+  margin: 0;
+  padding-top: clamp(80px, 10vw, 160px);
+  padding-bottom: clamp(80px, 10vw, 160px);
+}
+
+/* Override specific section padding for hero */
+section.min-h-screen {
+  padding-top: clamp(64px, 8vw, 96px);
+  padding-bottom: clamp(64px, 8vw, 96px);
+}
+
+/* Editorial animations - soft and minimal */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes draw-circle {
+  from {
+    stroke-dasharray: 0 283;
+  }
+}
+
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* Hover transitions for cards */
+.card-hover {
+  @apply transition-all duration-300 ease-out;
+}
+
+.card-hover:hover {
+  @apply -translate-y-1;
+  box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover enhancement */
+.btn-hover {
+  @apply transition-all duration-200 ease-out;
+}
+
+.btn-hover:hover {
+  @apply scale-[1.02];
+}
+
+.btn-hover:active {
+  @apply scale-[0.98];
+}
+
+/* Premium Statement Footer */
+.footer-main {
+  background-color: var(--cream);
+  padding: clamp(60px, 8vw, 100px) 6vw clamp(40px, 6vw, 60px) 6vw;
+  position: relative;
+  overflow: hidden;
+  height: clamp(400px, 50vh, 600px);
+}
+
+/* Seamless blend from previous section */
+.footer-main::before {
+  content: "";
+  position: absolute;
+  top: -140px;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--cream)
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-tagline {
+  max-width: 420px;
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.65);
+  margin-bottom: 0;
+  line-height: 1.6;
+  position: absolute;
+  top: clamp(0px, 2vw, 40px);
+  left: 6vw;
+  z-index: 1;
+}
+
+.footer-title {
+  font-size: clamp(12rem, 35vw, 32rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.75;
+  color: var(--red);
+  white-space: nowrap;
+  text-transform: uppercase;
+  margin-bottom: 0;
+  position: absolute;
+  bottom: -0.15em;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.footer-nav {
+  position: absolute;
+  bottom: 3rem;
+  right: 6vw;
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  z-index: 2;
+}
+
+.footer-nav a {
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.footer-nav a:hover {
+  color: var(--red);
+}
+
+/* Black Legal Footer */
+.footer-legal {
+  background-color: #000;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 1.2rem 6vw;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-legal nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-legal a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+  color: rgba(255, 255, 255, 1);
+}
