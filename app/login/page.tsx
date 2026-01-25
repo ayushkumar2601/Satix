@@ -23,6 +23,17 @@ export default function LoginPage() {
   const [walletConnected, setWalletConnected] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
 
+  // Check for error in URL params (from auth callback)
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const urlError = params.get('error')
+    if (urlError) {
+      setError(decodeURIComponent(urlError))
+      // Clean up URL
+      window.history.replaceState({}, '', '/login')
+    }
+  }, [])
+
   const validateEmail = (email: string) => {
     return email.includes('@') && email.includes('.')
   }
