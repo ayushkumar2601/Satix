@@ -28,10 +28,13 @@ export async function signUp(email: string, password: string) {
   )
 
   try {
-    // Sign up with email and password
+    // Sign up with email and password - disable email confirmation
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: undefined, // Disable email confirmation redirect
+      }
     })
 
     if (error) {

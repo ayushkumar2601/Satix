@@ -72,26 +72,40 @@ export default function LoginPage() {
         // Sign up
         const result = await signUp(email, password)
         if (result.error) {
-          setError(result.error)
+          // Better error messages for common issues
+          if (result.error.includes('rate limit') || result.error.includes('too many')) {
+            setError('Too many signup attempts. Please try again in 1 hour or use a different email address.')
+          } else if (result.error.includes('already registered') || result.error.includes('already exists')) {
+            setError('This email is already registered. Please sign in instead.')
+          } else {
+            setError(result.error)
+          }
           setIsLoading(false)
           return
         }
-        setSuccessMessage('Account created successfully! Redirecting...')
+        setSuccessMessage('Account created successfully! Redirecting to onboarding...')
         setTimeout(() => {
           router.push('/consent')
-        }, 1500)
+        }, 1000)
       } else {
         // Sign in
         const result = await signIn(email, password)
         if (result.error) {
-          setError(result.error)
+          // Better error messages for common issues
+          if (result.error.includes('rate limit') || result.error.includes('too many')) {
+            setError('Too many login attempts. Please try again in a few minutes.')
+          } else if (result.error.includes('Invalid login credentials')) {
+            setError('Invalid email or password. Please try again.')
+          } else {
+            setError(result.error)
+          }
           setIsLoading(false)
           return
         }
         setSuccessMessage('Logged in successfully! Redirecting...')
         setTimeout(() => {
           router.push('/dashboard')
-        }, 1500)
+        }, 1000)
       }
     } catch (err) {
       console.error('[v0] Auth error:', err)

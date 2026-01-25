@@ -142,12 +142,12 @@ export default function DashboardPage() {
     ? safeData.score_history.slice(-7).map(h => h.score)
     : hasScore && displayProfile.trust_score > 0
       ? [
+          Math.max(displayProfile.trust_score - 80, 300),
+          Math.max(displayProfile.trust_score - 60, 300),
           Math.max(displayProfile.trust_score - 45, 300),
-          Math.max(displayProfile.trust_score - 35, 300),
-          Math.max(displayProfile.trust_score - 25, 300),
-          Math.max(displayProfile.trust_score - 15, 300),
+          Math.max(displayProfile.trust_score - 30, 300),
+          Math.max(displayProfile.trust_score - 18, 300),
           Math.max(displayProfile.trust_score - 8, 300),
-          Math.max(displayProfile.trust_score - 3, 300),
           displayProfile.trust_score
         ]
       : [0]
@@ -162,9 +162,10 @@ export default function DashboardPage() {
       : ['Now']
 
   const currentScore = displayProfile.trust_score
-  const maxScore = Math.max(...scoreHistory, currentScore, 100)
-  const minScore = Math.min(...scoreHistory.filter(s => s > 0), currentScore * 0.8, 0)
-  const range = maxScore - minScore || 100
+  // Use fixed scale from 300 to 900 for consistent visualization
+  const chartMinScore = 300
+  const chartMaxScore = 900
+  const chartRange = chartMaxScore - chartMinScore
 
   // Calculate score trend
   const scoreTrend = hasScore && scoreHistory.length > 1 && scoreHistory[0] > 0
@@ -292,37 +293,66 @@ export default function DashboardPage() {
             </div>
 
             {/* Simple Chart - Bar Graph */}
-            <div className="h-32 md:h-40 flex items-end gap-1.5 md:gap-2 border-b border-gray-200 pb-2">
-              {scoreHistory.map((score, index) => {
-                // Calculate height as percentage (minimum 10% for visibility)
-                const heightPercent = score > 0 
-                  ? Math.max(((score - minScore) / range) * 80 + 10, 10)
-                  : 5
-                
-                return (
-                  <div key={index} className="flex-1 flex flex-col items-center gap-2 group relative">
-                    {/* Tooltip on hover */}
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                      {score}
-                    </div>
-                    {/* Bar */}
-                    <div 
-                      className={`w-full rounded-t-lg transition-all duration-500 ${
+            <div className="relative">
+              {/* Reference lines */}
+              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                <div className="border-t border-gray-300"></div>
+                <div className="border-t border-gray-300"></div>
+                <div className="border-t border-gray-300"></div>
+                <div className="border-t border-gray-300"></div>
+              </div>
+              
+              {/* Score labels on left */}
+              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-400 -ml-10 pointer-events-none">
+                <span>900</span>
+                <span>750</span>
+                <span>600</span>
+                <span>450</span>
+                <span>300</span>
+              </div>
+              
+              {/* Bars */}
+              <div className="h-48 md:h-56 flex items-end gap-2 md:gap-3 px-2 pt-4">
+                {scoreHistory.map((score, index) => {
+                  // Calculate height based on fixed 300-900 scale
+                  const heightPercent = score > 0 
+                    ? ((score - chartMinScore) / chartRange) * 100
+                    : 0
+                  
+                  // Ensure minimum visibility
+                  const displayHeight = Math.max(heightPercent, 8)
+                  
+                  return (
+                    <div key={index} className="flex-1 flex flex-col items-center gap-3 group relative">
+                      {/* Tooltip on hover */}
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 shadow-lg">
+                        <div className="font-bold">{score}</div>
+                        <div className="text-[10px] text-gray-300">{months[index]}</div>
+                      </div>
+                      {/* Bar */}
+                      <div 
+                        className={`w-full rounded-t-xl transition-all duration-500 ease-out ${
+                          index === scoreHistory.length - 1 
+                            ? "bg-red-600 shadow-lg ring-2 ring-red-600 ring-opacity-30" 
+                            : "bg-gray-400 group-hover:bg-gray-500 group-hover:shadow-md"
+                        }`}
+                        style={{ 
+                          height: `${displayHeight}%`,
+                          minHeight: '30px'
+                        }}
+                      />
+                      {/* Month label */}
+                      <span className={`text-xs font-medium transition-colors ${
                         index === scoreHistory.length - 1 
-                          ? "bg-red-600 shadow-lg" 
-                          : "bg-gray-300 group-hover:bg-gray-400"
-                      }`}
-                      style={{ 
-                        height: `${heightPercent}%`,
-                        minHeight: '20px'
-                      }}
-                      title={`Score: ${score}`}
-                    />
-                    {/* Month label */}
-                    <span className="text-xs text-muted-foreground font-medium">{months[index]}</span>
-                  </div>
-                )
-              })}
+                          ? "text-red-600 font-bold" 
+                          : "text-muted-foreground"
+                      }`}>
+                        {months[index]}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </div>
 
