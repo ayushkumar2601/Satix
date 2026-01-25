@@ -150,7 +150,17 @@ export default function LoginPage() {
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-fade-up">
-              <p className="text-sm text-red-700 font-medium">{error}</p>
+              <p className="text-sm text-red-700 font-medium mb-2">{error}</p>
+              {error.includes('rate limit') && (
+                <div className="text-xs text-red-600 mt-2 space-y-1">
+                  <p>💡 <strong>Quick fixes:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Try a different email address</li>
+                    <li>Wait 1 hour and try again</li>
+                    <li>Use Gmail+ trick: yourname+1@gmail.com</li>
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
