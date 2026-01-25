@@ -22,6 +22,7 @@ The system uses **deterministic feature extraction** combined with **Gemini AI r
 - **Fully Dynamic** - All data from backend, no hardcoded values
 - **Secure** - No raw data sent to AI, only computed features
 - **Auditable** - All calculations logged for regulators
+- **PDF Export** - Download professional trust score reports
 
 ## 🚀 Quick Start
 

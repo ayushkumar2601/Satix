@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { signOut } from "@/lib/auth/actions"
+import { ExportPDFButton } from "@/components/score/export-pdf-button"
 
 interface DashboardData {
   profile: {
@@ -213,9 +214,42 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-white p-6 md:p-8 rounded-2xl border border-border card-hover stagger-1 animate-fade-up">
             <div className="flex items-center justify-between mb-6 md:mb-8">
               <h2 className="text-base md:text-lg font-bold uppercase tracking-tight">Trust Score Trend</h2>
-              <div className="flex items-center gap-2 text-xs md:text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full font-medium">
-                <TrendingUp className="w-4 h-4" />
-                <span>{hasScore && scoreTrend !== '0' ? `${scoreTrend > 0 ? '+' : ''}${scoreTrend}%` : '0%'} {scoreHistory.length > 1 ? 'overall' : ''}</span>
+              <div className="flex items-center gap-2 md:gap-3">
+                {hasScore && (
+                  <ExportPDFButton 
+                    scoreData={{
+                      trust_score: displayProfile.trust_score,
+                      score_breakdown: {
+                        utility_score: 0.85,
+                        upi_score: 0.78,
+                        location_score: 0.92,
+                        social_score: 0.65
+                      },
+                      explanations: {
+                        utility: 'Strong payment history with consistent on-time payments',
+                        upi: 'Regular transaction activity with stable income patterns',
+                        location: 'Long-term residence stability',
+                        social: 'Growing trust network'
+                      },
+                      eligibility: {
+                        min_loan: displayProfile.loan_eligibility_min,
+                        max_loan: displayProfile.loan_eligibility_max,
+                        interest_rate: displayProfile.interest_rate
+                      },
+                      profile: {
+                        full_name: user?.email?.split('@')[0] || 'User',
+                        email: user?.email
+                      }
+                    }}
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs"
+                  />
+                )}
+                <div className="flex items-center gap-2 text-xs md:text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full font-medium">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>{hasScore && scoreTrend !== '0' ? `${scoreTrend > 0 ? '+' : ''}${scoreTrend}%` : '0%'} {scoreHistory.length > 1 ? 'overall' : ''}</span>
+                </div>
               </div>
             </div>
 

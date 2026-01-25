@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, TrendingUp, Shield, Clock, AlertCircle } from "lucide-react"
 import { ScoreBreakdown } from "@/components/score/breakdown"
 import { ImproveScore } from "@/components/score/improve"
+import { ExportPDFButton } from "@/components/score/export-pdf-button"
 import { useAuth } from "@/hooks/use-auth"
 
 interface TrustScoreData {
@@ -317,6 +318,35 @@ export default function ScorePage() {
               </div>
             ))}
           </div>
+
+          {/* Export PDF Button */}
+          {loanRange.max > 0 && (
+            <div 
+              className={`mb-6 transition-all duration-500 delay-200 ${
+                showStats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              <ExportPDFButton 
+                scoreData={{
+                  trust_score: scoreData.trust_score,
+                  score_breakdown: scoreData.score_breakdown,
+                  explanations: scoreData.explanations || {
+                    utility: 'No explanation available',
+                    upi: 'No explanation available',
+                    location: 'No explanation available',
+                    social: 'No explanation available'
+                  },
+                  eligibility: {
+                    min_loan: loanRange.min,
+                    max_loan: loanRange.max,
+                    interest_rate: scoreData.interest_rate || 15
+                  }
+                }}
+                className="w-full py-6 rounded-full uppercase tracking-wider font-semibold"
+                size="lg"
+              />
+            </div>
+          )}
 
           {/* CTA with reveal animation */}
           <div 
