@@ -292,18 +292,10 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Simple Chart - Bar Graph */}
-            <div className="relative">
-              {/* Reference lines */}
-              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
-                <div className="border-t border-gray-300"></div>
-                <div className="border-t border-gray-300"></div>
-                <div className="border-t border-gray-300"></div>
-                <div className="border-t border-gray-300"></div>
-              </div>
-              
-              {/* Score labels on left */}
-              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-400 -ml-10 pointer-events-none">
+            {/* Line Chart with Nodes */}
+            <div className="relative h-40 md:h-48">
+              {/* Y-axis labels */}
+              <div className="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-400 -ml-8">
                 <span>900</span>
                 <span>750</span>
                 <span>600</span>
@@ -311,47 +303,113 @@ export default function DashboardPage() {
                 <span>300</span>
               </div>
               
-              {/* Bars */}
-              <div className="h-48 md:h-56 flex items-end gap-2 md:gap-3 px-2 pt-4">
+              {/* Reference lines */}
+              <div className="absolute inset-0 bottom-8 flex flex-col justify-between">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={i} className="border-t border-gray-200"></div>
+                ))}
+              </div>
+              
+              {/* SVG Line Chart */}
+              <svg 
+                className="absolute inset-0 bottom-8 w-full h-full" 
+                preserveAspectRatio="none"
+                viewBox="0 0 100 100"
+              >
+                {/* Draw line path */}
+                <path
+                  d={(() => {
+                    const points = scoreHistory.map((score, index) => {
+                      const x = (index / (scoreHistory.length - 1)) * 100
+                      const y = 100 - ((score - chartMinScore) / chartRange) * 100
+                      return `${x},${y}`
+                    })
+                    return `M ${points.join(' L ')}`
+                  })()}
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth="0.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="drop-shadow-sm"
+                />
+                
+                {/* Draw gradient area under line */}
+                <path
+                  d={(() => {
+                    const points = scoreHistory.map((score, index) => {
+                      const x = (index / (scoreHistory.length - 1)) * 100
+                      const y = 100 - ((score - chartMinScore) / chartRange) * 100
+                      return `${x},${y}`
+                    })
+                    return `M 0,100 L ${points.join(' L ')} L 100,100 Z`
+                  })()}
+                  fill="url(#gradient)"
+                  opacity="0.1"
+                />
+                
+                {/* Gradient definition */}
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              
+              {/* Nodes and labels */}
+              <div className="absolute inset-0 bottom-8 flex items-end justify-between px-2">
                 {scoreHistory.map((score, index) => {
-                  // Calculate height based on fixed 300-900 scale
-                  const heightPercent = score > 0 
-                    ? ((score - chartMinScore) / chartRange) * 100
-                    : 0
-                  
-                  // Ensure minimum visibility
-                  const displayHeight = Math.max(heightPercent, 8)
+                  const heightPercent = ((score - chartMinScore) / chartRange) * 100
                   
                   return (
-                    <div key={index} className="flex-1 flex flex-col items-center gap-3 group relative">
-                      {/* Tooltip on hover */}
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 shadow-lg">
-                        <div className="font-bold">{score}</div>
-                        <div className="text-[10px] text-gray-300">{months[index]}</div>
-                      </div>
-                      {/* Bar */}
+                    <div 
+                      key={index} 
+                      className="flex-1 flex flex-col items-center relative group"
+                      style={{ height: '100%' }}
+                    >
+                      {/* Node */}
                       <div 
-                        className={`w-full rounded-t-xl transition-all duration-500 ease-out ${
-                          index === scoreHistory.length - 1 
-                            ? "bg-red-600 shadow-lg ring-2 ring-red-600 ring-opacity-30" 
-                            : "bg-gray-400 group-hover:bg-gray-500 group-hover:shadow-md"
-                        }`}
-                        style={{ 
-                          height: `${displayHeight}%`,
-                          minHeight: '30px'
-                        }}
-                      />
-                      {/* Month label */}
-                      <span className={`text-xs font-medium transition-colors ${
-                        index === scoreHistory.length - 1 
-                          ? "text-red-600 font-bold" 
-                          : "text-muted-foreground"
-                      }`}>
-                        {months[index]}
-                      </span>
+                        className="absolute"
+                        style={{ bottom: `${heightPercent}%` }}
+                      >
+                        <div 
+                          className={`w-3 h-3 rounded-full border-2 transition-all duration-300 cursor-pointer ${
+                            index === scoreHistory.length - 1
+                              ? 'bg-red-600 border-white shadow-lg scale-125 ring-4 ring-red-600 ring-opacity-20'
+                              : 'bg-white border-gray-400 group-hover:border-red-600 group-hover:scale-150 group-hover:shadow-md'
+                          }`}
+                        />
+                        
+                        {/* Tooltip on hover */}
+                        <div className="absolute left-1/2 -translate-x-1/2 -top-12 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                          <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-xl whitespace-nowrap">
+                            <div className="font-bold text-sm">{score}</div>
+                            <div className="text-[10px] text-gray-300">{months[index]}</div>
+                            {/* Arrow */}
+                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )
                 })}
+              </div>
+              
+              {/* X-axis labels */}
+              <div className="absolute bottom-0 left-0 right-0 flex justify-between px-2 pt-2">
+                {months.map((month, index) => (
+                  <div 
+                    key={index} 
+                    className={`flex-1 text-center text-xs font-medium transition-colors ${
+                      index === months.length - 1
+                        ? 'text-red-600 font-bold'
+                        : 'text-gray-500'
+                    }`}
+                  >
+                    {month}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
