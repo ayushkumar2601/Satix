@@ -83,10 +83,9 @@ export default function LoginPage() {
           setIsLoading(false)
           return
         }
-        setSuccessMessage('Account created successfully! Redirecting to onboarding...')
-        setTimeout(() => {
-          router.push('/consent')
-        }, 1000)
+        // Show success message with email check instruction
+        setSuccessMessage(`Account created! Please check your email (${email}) for a confirmation link to complete signup.`)
+        setIsLoading(false)
       } else {
         // Sign in
         const result = await signIn(email, password)
@@ -96,6 +95,8 @@ export default function LoginPage() {
             setError('Too many login attempts. Please try again in a few minutes.')
           } else if (result.error.includes('Invalid login credentials')) {
             setError('Invalid email or password. Please try again.')
+          } else if (result.error.includes('Email not confirmed')) {
+            setError('Please confirm your email first. Check your inbox for the confirmation link.')
           } else {
             setError(result.error)
           }
@@ -167,7 +168,21 @@ export default function LoginPage() {
           {/* Success Message */}
           {successMessage && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg animate-fade-up">
-              <p className="text-sm text-green-700 font-medium">{successMessage}</p>
+              <p className="text-sm text-green-700 font-medium mb-2">{successMessage}</p>
+              {successMessage.includes('check your email') && (
+                <div className="mt-3 p-3 bg-white rounded border border-green-100">
+                  <p className="text-xs text-gray-700 font-semibold mb-2">📧 Next Steps:</p>
+                  <ol className="list-decimal list-inside text-xs text-gray-600 space-y-1 ml-2">
+                    <li>Open your email inbox</li>
+                    <li>Look for an email from Satix</li>
+                    <li>Click the confirmation link</li>
+                    <li>You'll be redirected to start onboarding</li>
+                  </ol>
+                  <p className="text-xs text-gray-500 mt-2 italic">
+                    💡 Tip: Check your spam folder if you don't see it
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

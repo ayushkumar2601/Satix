@@ -28,12 +28,12 @@ export async function signUp(email: string, password: string) {
   )
 
   try {
-    // Sign up with email and password - disable email confirmation
+    // Sign up with email and password - with email confirmation
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: undefined, // Disable email confirmation redirect
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/callback`,
       }
     })
 
