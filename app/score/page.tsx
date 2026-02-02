@@ -88,7 +88,7 @@ export default function ScorePage() {
 
     const targetScore = scoreData.trust_score
 
-    // Start circle animation first
+    // Start circle animation
     const circleTimer = setTimeout(() => {
       const circleInterval = setInterval(() => {
         setCircleProgress(prev => {
@@ -101,31 +101,12 @@ export default function ScorePage() {
       }, 20)
     }, 500)
 
-    // Then animate the score number
-    const scoreTimer = setTimeout(() => {
-      const duration = 2000
-      const steps = 60
-      const increment = targetScore / steps
-      let current = 0
-
-      const timer = setInterval(() => {
-        current += increment
-        if (current >= targetScore) {
-          setAnimatedScore(targetScore)
-          clearInterval(timer)
-        } else {
-          setAnimatedScore(Math.floor(current))
-        }
-      }, duration / steps)
-    }, 800)
-
-    // Show content after score animation starts
+    // Show content after animation starts
     const contentTimer = setTimeout(() => setShowContent(true), 2000)
     const statsTimer = setTimeout(() => setShowStats(true), 2400)
 
     return () => {
       clearTimeout(circleTimer)
-      clearTimeout(scoreTimer)
       clearTimeout(contentTimer)
       clearTimeout(statsTimer)
     }

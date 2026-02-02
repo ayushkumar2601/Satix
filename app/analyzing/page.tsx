@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Check } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { toast } from "sonner"
 
 const analysisSteps = [
   "Extracting utility payment patterns",
@@ -61,6 +62,11 @@ export default function AnalyzingPage() {
 
         console.log('[Analyzing] Trust score calculated:', data.trust_score)
         
+        // Show success toast
+        toast.success('Trust Score Calculated!', {
+          description: `Your score is ${data.trust_score}`
+        })
+        
         // Wait for animation to complete before redirecting
         setTimeout(() => {
           router.push('/score')
@@ -68,7 +74,13 @@ export default function AnalyzingPage() {
 
       } catch (err) {
         console.error('[Analyzing] Error:', err)
-        setError(err instanceof Error ? err.message : 'Failed to calculate trust score')
+        const errorMsg = err instanceof Error ? err.message : 'Failed to calculate trust score'
+        setError(errorMsg)
+        
+        // Show error toast
+        toast.error('Calculation Error', {
+          description: 'Using fallback scoring method'
+        })
         
         // Still redirect after error (fallback will be used)
         setTimeout(() => {

@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/hooks/use-auth"
 import { signOut } from "@/lib/auth/actions"
 import { ExportPDFButton } from "@/components/score/export-pdf-button"
+import { useCounter } from "@/hooks/use-counter"
 
 interface DashboardData {
   profile: {
@@ -64,6 +65,12 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // Animated counter for trust score
+  const animatedTrustScore = useCounter(
+    data?.profile?.trust_score || 0,
+    2000
+  )
 
   useEffect(() => {
     // Redirect if not authenticated
@@ -270,7 +277,7 @@ export default function DashboardPage() {
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-8 md:mb-10">
               <div>
                 <p className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none">
-                  {displayProfile.trust_score}
+                  {hasScore ? animatedTrustScore : 0}
                 </p>
                 <p className="text-muted-foreground text-xs md:text-sm uppercase tracking-wider mt-2">
                   Current Score
