@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { PhantomWallet } from '@/components/auth/phantom-wallet'
 import { signUp, signIn } from '@/lib/auth/actions'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -74,17 +75,26 @@ export default function LoginPage() {
         if (result.error) {
           // Better error messages for common issues
           if (result.error.includes('rate limit') || result.error.includes('too many')) {
-            setError('Too many signup attempts. Please try again in 1 hour or use a different email address.')
+            const errorMsg = 'Too many signup attempts. Please try again in 1 hour or use a different email address.'
+            setError(errorMsg)
+            toast.error(errorMsg)
           } else if (result.error.includes('already registered') || result.error.includes('already exists')) {
-            setError('This email is already registered. Please sign in instead.')
+            const errorMsg = 'This email is already registered. Please sign in instead.'
+            setError(errorMsg)
+            toast.error(errorMsg)
           } else {
             setError(result.error)
+            toast.error(result.error)
           }
           setIsLoading(false)
           return
         }
         // Show success message with email check instruction
-        setSuccessMessage(`Account created! Please check your email (${email}) for a confirmation link to complete signup.`)
+        const successMsg = `Account created! Please check your email (${email}) for a confirmation link to complete signup.`
+        setSuccessMessage(successMsg)
+        toast.success('Account created successfully!', {
+          description: 'Check your email for confirmation link'
+        })
         setIsLoading(false)
       } else {
         // Sign in
@@ -92,25 +102,37 @@ export default function LoginPage() {
         if (result.error) {
           // Better error messages for common issues
           if (result.error.includes('rate limit') || result.error.includes('too many')) {
-            setError('Too many login attempts. Please try again in a few minutes.')
+            const errorMsg = 'Too many login attempts. Please try again in a few minutes.'
+            setError(errorMsg)
+            toast.error(errorMsg)
           } else if (result.error.includes('Invalid login credentials')) {
-            setError('Invalid email or password. Please try again.')
+            const errorMsg = 'Invalid email or password. Please try again.'
+            setError(errorMsg)
+            toast.error(errorMsg)
           } else if (result.error.includes('Email not confirmed')) {
-            setError('Please confirm your email first. Check your inbox for the confirmation link.')
+            const errorMsg = 'Please confirm your email first. Check your inbox for the confirmation link.'
+            setError(errorMsg)
+            toast.error(errorMsg)
           } else {
             setError(result.error)
+            toast.error(result.error)
           }
           setIsLoading(false)
           return
         }
         setSuccessMessage('Logged in successfully! Redirecting...')
+        toast.success('Welcome back!', {
+          description: 'Redirecting to dashboard...'
+        })
         setTimeout(() => {
           router.push('/dashboard')
         }, 1000)
       }
     } catch (err) {
       console.error('[v0] Auth error:', err)
-      setError('An error occurred. Please try again.')
+      const errorMsg = 'An error occurred. Please try again.'
+      setError(errorMsg)
+      toast.error(errorMsg)
       setIsLoading(false)
     }
   }

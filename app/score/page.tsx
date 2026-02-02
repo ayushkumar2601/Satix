@@ -9,6 +9,7 @@ import { ScoreBreakdown } from "@/components/score/breakdown"
 import { ImproveScore } from "@/components/score/improve"
 import { ExportPDFButton } from "@/components/score/export-pdf-button"
 import { useAuth } from "@/hooks/use-auth"
+import { useCounter } from "@/hooks/use-counter"
 
 interface TrustScoreData {
   trust_score: number
@@ -34,13 +35,15 @@ interface TrustScoreData {
 export default function ScorePage() {
   const router = useRouter()
   const { user, loading: authLoading } = useAuth()
-  const [animatedScore, setAnimatedScore] = useState(0)
   const [showContent, setShowContent] = useState(false)
   const [showStats, setShowStats] = useState(false)
   const [circleProgress, setCircleProgress] = useState(0)
   const [scoreData, setScoreData] = useState<TrustScoreData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // Animated counter for the score
+  const animatedScore = useCounter(scoreData?.trust_score || 0, 2000)
 
   useEffect(() => {
     // Redirect if not authenticated
